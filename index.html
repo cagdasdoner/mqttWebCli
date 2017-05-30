@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="./libs/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel='stylesheet' type='text/css' />
+    <div class="page-header">
+        <h2>MQTT Basic Client</h2>
+        <p>Subscribe to receive incoming messages.</p>
+    </div>
+</head>
+<body onload="MQTT_Connect()">
+    <div id="connectionDiv">
+        Connecting to MQTT Broker...
+    </div>
+    <br/>
+    <div id="subpubDiv" class="hidden col-xs-4">
+        <div class="form-group">
+            <label for="subText">Topic to Subscribe:</label>
+            <input type="text" class="form-control" id="subText">
+            <button id="subButton" type="button" class="btn btn-info">Subscribe</button>
+        </div>
+        <br/>
+        <div class="form-group">
+            <label for="pubTopicText">Publish Topic:</label>
+            <input type="text" class="form-control" id="pubTopicText">
+            <label for="pubMessageText">Publish Message:</label>
+            <input type="text" class="form-control" id="pubMessageText">
+            <button id="pubButton" type="button" class="btn btn-info">Publish</button>
+        </div>
+        <div id="messageDiv" class="hidden" >
+            <b>Received data will be written in here...</b>
+        </div>
+    </div>
+
+</body>
+
+<script src="./libs/jquery.min.js"></script>
+<script src="./libs/mqttws31.min.js"></script>
+<script src="./libs/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+<script src="./js/Constants.js"></script>
+<script src="./js/Elements.js"></script>
+<script src="./js/Tools.js"></script>
+<script src="./js/MQTTHandler.js"></script>
+
+</html>
