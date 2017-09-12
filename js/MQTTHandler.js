@@ -30,12 +30,22 @@ function MQTT_Connect()
     mqttClient = new Paho.MQTT.Client(MQTT_BROKER, Number(MQTT_PORT), uniqeUserId);
     mqttClient.onConnectionLost = onMQTTConnectionLost;
     mqttClient.onMessageArrived = onMQTTMessageArrived;
+    mqttClient.onSuccess = onMQTTConnect;
 
-    mqttClient.connect({
-        onSuccess: onMQTTConnect, 
-        userName : MQTT_USER,
-        password : MQTT_PASS
-    });
+    var mqttOptions = {
+        onSuccess : onMQTTConnect
+    };
+
+    if(MQTT_USER !== "" && MQTT_PASS !== "")
+    {
+        mqttOptions = {
+            onSuccess: onMQTTConnect,
+            userName : MQTT_USER,
+            password : MQTT_PASS
+        };
+    }
+
+    mqttClient.connect(mqttOptions);
 
     return mqttClient;
 }
