@@ -3,59 +3,68 @@ var uniqeUserId = null;
 
 function onMQTTConnect()
 {
-    console.log("onConnect");
     HTML_connectionEstablished(uniqeUserId);
+}
+
+function onMQTTFail(responseObject)
+{
+    alert("Connection/Credential Failure: " + responseObject.errorMessage);
 }
 
 function onMQTTConnectionLost(responseObject)
 {
     if (responseObject.errorCode !== 0)
     {
-        console.log("onConnectionLost:" + responseObject.errorMessage);
+        alert("Connection Lost: " + responseObject.errorMessage);
     }
 }
 
 function onMQTTMessageArrived(message)
 {
-    console.log("onMessageArrived:" + message.payloadString);
-    HTML_showIncomingMessage(message.payloadString);
+    HTML_showIncomingMessage(message.payloadString, message.destinationName);
 }
 
-function MQTT_Connect()
+function MQTT_Connect(user, pass, broker, port)
 {
-    uniqeUserId = TOOL_GenerateUUID();
-    console.log(uniqeUserId);
-
-    /* MQTT Operations. */
-    mqttClient = new Paho.MQTT.Client(MQTT_BROKER, Number(MQTT_PORT), uniqeUserId);
-    mqttClient.onConnectionLost = onMQTTConnectionLost;
-    mqttClient.onMessageArrived = onMQTTMessageArrived;
-    mqttClient.onSuccess = onMQTTConnect;
-
-    var mqttOptions = {
-        onSuccess : onMQTTConnect
-    };
-
-    if(MQTT_USER !== "" && MQTT_PASS !== "")
+    /* Other brokers may have accept anonymous connections, so do not check pass sanity. */
+    if(user !== "" && broker !== "" && port !== "")
     {
-        mqttOptions = {
-            onSuccess: onMQTTConnect,
-            userName : MQTT_USER,
-            password : MQTT_PASS
-        };
-    }
+        uniqeUserId = TOOL_GenerateUUID();
+        mqttClient = new Paho.MQTT.Client(broker, Number(port), uniqeUserId);
+        mqttClient.onConnectionLost = onMQTTConnectionLost;
+        mqttClient.onMessageArrived = onMQTTMessageArrived;
 
-    mqttClient.connect(mqttOptions);
+        mqttOptions = {
+            onSuccess : onMQTTConnect,
+            onFailure : onMQTTFail,
+            userName : user,
+            password : pass
+        };
+
+        mqttClient.connect(mqttOptions);
+    }
+    else
+    {
+        alert("Please provide broker credentials.");
+    }
 
     return mqttClient;
 }
 
 function MQTT_Subscribe(topic)
 {
-    console.log("MQTT_Subscribe " + topic);
     if(mqttClient)
     {
-        mqttClient.subscribe(topic);
+        var subOptions = {
+            onSuccess : function(subResponse) {
+                HTML_showSubscriptionStatus(topic);
+              },
+            onFailure : function(subResponse) {
+                alert("Topic Subscription Failure.");
+              },
+            timeout : 3
+        }
+        mqttClient.subscribe(topic, subOptions);
     }
 }
 

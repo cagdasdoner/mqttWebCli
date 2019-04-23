@@ -1,15 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <title>MaQiaTTo Websocket Interface</title>
     <link href="./libs/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel='stylesheet' type='text/css' />
     <div class="page-header">
-        <h2>MQTT Basic Client</h2>
-        <p>Subscribe to receive incoming messages.</p>
+        <h2>MaQiaTTo Websocket Interface for Everyone!</h2>
+        <p> Connect and Publish/Subscribe on your topics. <br/>
+            MaQiaTTo users! Check your <a href="https://www.maqiatto.com/configure" target="_blank">available topics</a> before proceeding.
+        </p>
     </div>
 </head>
-<body onload="MQTT_Connect()">
+<body>
     <div id="connectionDiv">
-        Connecting to MQTT Broker...
+        <p>Connect to the Broker with your credentials:</p>
+        <div class="form-group col-xs-12">
+            <label>Broker Address:</label>
+            <input type="text" id="brokerText" value="maqiatto.com">
+            <label for="userText">Broker Port:</label>
+            <input type="text" id="portText" value="8883">
+        </div>
+        <div class="form-group col-xs-4">
+            <label for="userText">Broker Username:</label>
+            <input type="text" class="form-control" id="userText">
+            <label for="passText">Broker Password:</label>
+            <input type="password" class="form-control" id="passText">
+            <button id="connButton" type="button" class="btn btn-info">Connect</button>
+        </div>
     </div>
     <br/>
     <div id="subpubDiv" class="hidden col-xs-4">
@@ -18,7 +35,6 @@
             <input type="text" class="form-control" id="subText">
             <button id="subButton" type="button" class="btn btn-info">Subscribe</button>
         </div>
-        <br/>
         <div class="form-group">
             <label for="pubTopicText">Publish Topic:</label>
             <input type="text" class="form-control" id="pubTopicText">
@@ -26,17 +42,16 @@
             <input type="text" class="form-control" id="pubMessageText">
             <button id="pubButton" type="button" class="btn btn-info">Publish</button>
         </div>
-        <div id="messageDiv" class="hidden" >
-            <b>Received data will be written in here...</b>
-        </div>
     </div>
-
+    <br/>
+    <div id="messageDiv" class="hidden  col-xs-12" >
+        <b><u>Actions and Received Messages:<u></b>
+    </div>
 </body>
 
 <script src="./libs/jquery.min.js"></script>
 <script src="./libs/mqttws31.min.js"></script>
 <script src="./libs/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
-<script src="./js/Constants.js"></script>
 <script src="./js/Elements.js"></script>
 <script src="./js/Tools.js"></script>
 <script src="./js/MQTTHandler.js"></script>
